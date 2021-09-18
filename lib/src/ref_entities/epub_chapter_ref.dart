@@ -7,46 +7,39 @@ import 'epub_text_content_file_ref.dart';
 
 class EpubChapterRef {
   EpubTextContentFileRef? epubTextContentFileRef;
+  String? title;
+  String? contentFileName;
+  String? anchor;
+  List<EpubChapterRef>? subChapters;
 
-  String? Title;
-  String? ContentFileName;
-  String? Anchor;
-  List<EpubChapterRef>? SubChapters;
-
-  EpubChapterRef(EpubTextContentFileRef? epubTextContentFileRef) {
-    this.epubTextContentFileRef = epubTextContentFileRef;
-  }
+  EpubChapterRef({this.epubTextContentFileRef, this.title, this.contentFileName, this.anchor, this.subChapters});
 
   @override
   int get hashCode {
-    var objects = [
-      Title.hashCode,
-      ContentFileName.hashCode,
-      Anchor.hashCode,
+    final List<int> objects = <int>[
+      title.hashCode,
+      contentFileName.hashCode,
+      anchor.hashCode,
       epubTextContentFileRef.hashCode,
-      ...SubChapters?.map((subChapter) => subChapter.hashCode) ?? [0],
+      ...subChapters?.map((EpubChapterRef subChapter) => subChapter.hashCode) ?? <int>[0],
     ];
     return hashObjects(objects);
   }
 
   @override
-  bool operator ==(other) {
-    if (!(other is EpubChapterRef)) {
+  bool operator ==(Object other) {
+    if (other is! EpubChapterRef) {
       return false;
     }
-    return Title == other.Title &&
-        ContentFileName == other.ContentFileName &&
-        Anchor == other.Anchor &&
+    return title == other.title &&
+        contentFileName == other.contentFileName &&
+        anchor == other.anchor &&
         epubTextContentFileRef == other.epubTextContentFileRef &&
-        collections.listsEqual(SubChapters, other.SubChapters);
+        collections.listsEqual(subChapters, other.subChapters);
   }
 
-  Future<String> readHtmlContent() async {
-    return epubTextContentFileRef!.readContentAsText();
-  }
+  Future<String> readHtmlContent() async => epubTextContentFileRef!.readContentAsText();
 
   @override
-  String toString() {
-    return 'Title: $Title, Subchapter count: ${SubChapters!.length}';
-  }
+  String toString() => 'Title: $title, Subchapter count: ${subChapters!.length}';
 }

@@ -7,31 +7,23 @@ import 'epub_spine.dart';
 import 'epub_version.dart';
 
 class EpubPackage {
-  EpubVersion? Version;
-  EpubMetadata? Metadata;
-  EpubManifest? Manifest;
-  EpubSpine? Spine;
-  EpubGuide? Guide;
+  EpubVersion? version;
+  EpubMetadata? metadata;
+  EpubManifest? manifest;
+  EpubSpine? spine;
+  EpubGuide? guide;
+
+  EpubPackage({this.version, this.metadata, this.manifest, this.spine, this.guide});
 
   @override
-  int get hashCode => hashObjects([
-        Version.hashCode,
-        Metadata.hashCode,
-        Manifest.hashCode,
-        Spine.hashCode,
-        Guide.hashCode
-      ]);
+  int get hashCode => hashObjects(<int>[version.hashCode, metadata.hashCode, manifest.hashCode, spine.hashCode, guide.hashCode]);
 
-  bool operator ==(other) {
-    var otherAs = other as EpubPackage;
-    if (otherAs == null) {
+  @override
+  bool operator ==(Object other) {
+    if (other is! EpubPackage) {
       return false;
     }
 
-    return Version == otherAs.Version &&
-        Metadata == otherAs.Metadata &&
-        Manifest == otherAs.Manifest &&
-        Spine == otherAs.Spine &&
-        Guide == otherAs.Guide;
+    return version == other.version && metadata == other.metadata && manifest == other.manifest && spine == other.spine && guide == other.guide;
   }
 }

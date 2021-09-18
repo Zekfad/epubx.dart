@@ -1,17 +1,18 @@
 import 'dart:html';
+
 import 'package:http/http.dart' as http;
-import 'package:epubx/epub.dart' as epub;
+import 'package:repub/repub.dart' as epub;
 
-void main() async {
-  querySelector('#output').text = 'Your Dart app is running.';
+Future<void> main() async {
+  querySelector('#output')!.text = 'Your Dart app is running.';
 
-  var epubRes = await http.get('alicesAdventuresUnderGround.epub');
+  final http.Response epubRes = await http.get(Uri(path: './alicesAdventuresUnderGround.epub'));
   if (epubRes.statusCode == 200) {
-    var book = await epub.EpubReader.openBook(epubRes.bodyBytes);
-    querySelector('#title').text = book.Title;
-    querySelector('#author').text = book.Author;
-    var chapters = await book.getChapters();
-    querySelector('#nchapters').text = chapters.length.toString();
+    final epub.EpubBookRef book = await epub.openBook(epubRes.bodyBytes);
+    querySelector('#title')!.text = book.title;
+    querySelector('#author')!.text = book.author;
+    final List<epub.EpubChapterRef> chapters = await book.getChapters();
+    querySelector('#nchapters')!.text = chapters.length.toString();
     querySelectorAll('h2').style.visibility = 'visible';
   }
 }

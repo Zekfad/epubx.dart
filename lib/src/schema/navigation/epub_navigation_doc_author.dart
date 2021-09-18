@@ -2,22 +2,22 @@ import 'package:quiver/collection.dart' as collections;
 import 'package:quiver/core.dart';
 
 class EpubNavigationDocAuthor {
-  List<String>? Authors;
+  List<String> authors;
 
-  EpubNavigationDocAuthor() {
-    Authors = <String>[];
-  }
+  EpubNavigationDocAuthor({this.authors = const <String>[]});
 
   @override
   int get hashCode {
-    var objects = []..addAll(Authors!.map((author) => author.hashCode));
+    final List<int> objects = <int>[...authors.map((String author) => author.hashCode)];
     return hashObjects(objects);
   }
 
-  bool operator ==(other) {
-    var otherAs = other as EpubNavigationDocAuthor;
-    if (otherAs == null) return false;
+  @override
+  bool operator ==(Object other) {
+    if (other is! EpubNavigationDocAuthor) {
+      return false;
+    }
 
-    return collections.listsEqual(Authors, otherAs.Authors);
+    return collections.listsEqual(authors, other.authors);
   }
 }

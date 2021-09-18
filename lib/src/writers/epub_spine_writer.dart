@@ -1,15 +1,12 @@
-import 'package:epubx/src/schema/opf/epub_spine.dart';
-import 'package:xml/src/xml/builder.dart' show XmlBuilder;
+import 'package:xml/xml.dart';
 
-class EpubSpineWriter {
-  static void writeSpine(XmlBuilder builder, EpubSpine spine) {
-    builder
-      ..element('spine', attributes: {'toc': spine.TableOfContents!}, nest: () {
-        spine.Items!.forEach((spineitem) => builder.element('itemref',
-                attributes: {
-                  'idref': spineitem.IdRef!,
-                  'linear': spineitem.IsLinear! ? 'no' : 'yes'
-                }));
-      });
-  }
+import '../schema/opf/epub_spine.dart';
+import '../schema/opf/epub_spine_item_ref.dart';
+
+void writeSpine(XmlBuilder builder, EpubSpine spine) {
+  builder.element('spine', attributes: <String, String>{'toc': spine.tableOfContents!}, nest: () {
+    for (final EpubSpineItemRef spineitem in spine.items) {
+      builder.element('itemref', attributes: <String, String>{'idref': spineitem.idRef, 'linear': spineitem.isLinear ? 'no' : 'yes'});
+    }
+  });
 }

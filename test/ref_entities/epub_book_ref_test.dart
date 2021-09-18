@@ -1,115 +1,101 @@
 library epubreadertest;
 
 import 'package:archive/archive.dart';
-import 'package:epubx/epub.dart';
-import 'package:epubx/src/entities/epub_schema.dart';
-import 'package:epubx/src/ref_entities/epub_content_ref.dart';
-import 'package:epubx/src/ref_entities/epub_text_content_file_ref.dart';
+import 'package:repub/repub.dart';
 import 'package:test/test.dart';
 
-main() async {
-  Archive arch = new Archive();
-  var reference = new EpubBookRef(arch);
-  reference
-    ..Author = "orthros"
-    ..AuthorList = ["orthros"]
-    ..Schema = new EpubSchema()
-    ..Title = "A Dissertation on Epubs";
+Future<void> main() async {
+  final Archive archive = Archive();
+  final EpubBookRef reference =
+      EpubBookRef(epubArchive: archive, author: 'orthros', authorList: <String>['orthros'], schema: EpubSchema(), title: 'A Dissertation on Epubs');
 
-  EpubBookRef testBookRef;
+  late EpubBookRef testBookRef;
   setUp(() async {
-    testBookRef = new EpubBookRef(arch);
-    testBookRef
-      ..Author = "orthros"
-      ..AuthorList = ["orthros"]
-      ..Schema = new EpubSchema()
-      ..Title = "A Dissertation on Epubs";
+    testBookRef = EpubBookRef(epubArchive: archive, author: 'orthros', authorList: <String>['orthros'], schema: EpubSchema(), title: 'A Dissertation on Epubs');
   });
-  tearDown(() async {
-    testBookRef = null;
-  });
-  group("EpubBookRef", () {
-    group(".equals", () {
-      test("is true for equivalent objects", () async {
+
+  group('EpubBookRef', () {
+    group('.equals', () {
+      test('is true for equivalent objects', () async {
         expect(testBookRef, equals(reference));
       });
 
-      test("is false when Content changes", () async {
-        var file = new EpubTextContentFileRef(testBookRef);
-        file
-          ..ContentMimeType = "application/txt"
-          ..ContentType = EpubContentType.OTHER
-          ..FileName = "orthros.txt";
+      test('is false when Content changes', () async {
+        final EpubTextContentFileRef file = EpubTextContentFileRef(
+          epubBookRef: testBookRef,
+          contentMimeType: 'application/txt',
+          contentType: EpubContentType.other,
+          fileName: 'orthros.txt',
+        );
 
-        EpubContentRef content = new EpubContentRef();
-        content.AllFiles["hello"] = file;
+        final EpubContentRef content = EpubContentRef(allFiles: <String, EpubTextContentFileRef>{'hello': file});
 
-        testBookRef.Content = content;
+        testBookRef.content = content;
 
         expect(testBookRef, isNot(reference));
       });
 
-      test("is false when Author changes", () async {
-        testBookRef.Author = "NotOrthros";
+      test('is false when Author changes', () async {
+        testBookRef.author = 'NotOrthros';
         expect(testBookRef, isNot(reference));
       });
 
-      test("is false when AuthorList changes", () async {
-        testBookRef.AuthorList = ["NotOrthros"];
+      test('is false when AuthorList changes', () async {
+        testBookRef.authorList = <String>['NotOrthros'];
         expect(testBookRef, isNot(reference));
       });
 
-      test("is false when Schema changes", () async {
-        var schema = new EpubSchema();
-        schema.ContentDirectoryPath = "some/random/path";
-        testBookRef.Schema = schema;
+      test('is false when Schema changes', () async {
+        final EpubSchema schema = EpubSchema(contentDirectoryPath: 'some/random/path');
+
+        testBookRef.schema = schema;
         expect(testBookRef, isNot(reference));
       });
 
-      test("is false when Title changes", () async {
-        testBookRef.Title = "The Philosophy of Epubs";
+      test('is false when Title changes', () async {
+        testBookRef.title = 'The Philosophy of Epubs';
         expect(testBookRef, isNot(reference));
       });
     });
 
-    group(".hashCode", () {
-      test("is true for equivalent objects", () async {
+    group('.hashCode', () {
+      test('is true for equivalent objects', () async {
         expect(testBookRef.hashCode, equals(reference.hashCode));
       });
 
-      test("is false when Content changes", () async {
-        var file = new EpubTextContentFileRef(testBookRef);
-        file
-          ..ContentMimeType = "application/txt"
-          ..ContentType = EpubContentType.OTHER
-          ..FileName = "orthros.txt";
+      test('is false when Content changes', () async {
+        final EpubTextContentFileRef file = EpubTextContentFileRef(
+          epubBookRef: testBookRef,
+          contentMimeType: 'application/txt',
+          contentType: EpubContentType.other,
+          fileName: 'orthros.txt',
+        );
 
-        EpubContentRef content = new EpubContentRef();
-        content.AllFiles["hello"] = file;
+        final EpubContentRef content = EpubContentRef(allFiles: <String, EpubTextContentFileRef>{'hello': file});
 
-        testBookRef.Content = content;
+        testBookRef.content = content;
 
         expect(testBookRef, isNot(reference));
       });
 
-      test("is false when Author changes", () async {
-        testBookRef.Author = "NotOrthros";
+      test('is false when Author changes', () async {
+        testBookRef.author = 'NotOrthros';
         expect(testBookRef.hashCode, isNot(reference.hashCode));
       });
 
-      test("is false when AuthorList changes", () async {
-        testBookRef.AuthorList = ["NotOrthros"];
+      test('is false when AuthorList changes', () async {
+        testBookRef.authorList = <String>['NotOrthros'];
         expect(testBookRef.hashCode, isNot(reference.hashCode));
       });
-      test("is false when Schema changes", () async {
-        var schema = new EpubSchema();
-        schema.ContentDirectoryPath = "some/random/path";
-        testBookRef.Schema = schema;
+      test('is false when Schema changes', () async {
+        final EpubSchema schema = EpubSchema(contentDirectoryPath: 'some/random/path');
+
+        testBookRef.schema = schema;
         expect(testBookRef.hashCode, isNot(reference.hashCode));
       });
 
-      test("is false when Title changes", () async {
-        testBookRef.Title = "The Philosophy of Epubs";
+      test('is false when Title changes', () async {
+        testBookRef.title = 'The Philosophy of Epubs';
         expect(testBookRef.hashCode, isNot(reference.hashCode));
       });
     });

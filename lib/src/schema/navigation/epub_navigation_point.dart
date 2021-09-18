@@ -5,45 +5,51 @@ import 'epub_metadata.dart';
 import 'epub_navigation_label.dart';
 
 class EpubNavigationPoint {
-  String? Id;
-  String? Class;
-  String? PlayOrder;
-  List<EpubNavigationLabel>? NavigationLabels;
-  EpubNavigationContent? Content;
-  List<EpubNavigationPoint>? ChildNavigationPoints;
+  String? id;
+  String? cssClass;
+  String? playOrder;
+  List<EpubNavigationLabel> navigationLabels;
+  EpubNavigationContent? content;
+  List<EpubNavigationPoint> childNavigationPoints;
+
+  EpubNavigationPoint(
+      {this.id,
+      this.cssClass,
+      this.playOrder,
+      this.navigationLabels = const <EpubNavigationLabel>[],
+      this.content,
+      this.childNavigationPoints = const <EpubNavigationPoint>[]});
 
   @override
   int get hashCode {
-    var objects = []
-      ..add(Id.hashCode)
-      ..add(Class.hashCode)
-      ..add(PlayOrder.hashCode)
-      ..add(Content.hashCode)
-      ..addAll(NavigationLabels!.map((label) => label.hashCode))
-      ..addAll(ChildNavigationPoints!.map((point) => point.hashCode));
+    final List<int> objects = <int>[
+      id.hashCode,
+      cssClass.hashCode,
+      playOrder.hashCode,
+      content.hashCode,
+      ...navigationLabels.map((EpubNavigationLabel label) => label.hashCode),
+      ...childNavigationPoints.map((EpubNavigationPoint point) => point.hashCode)
+    ];
     return hashObjects(objects);
   }
 
-  bool operator ==(other) {
-    var otherAs = other as EpubNavigationPoint;
-    if (otherAs == null) {
+  @override
+  bool operator ==(Object other) {
+    if (other is! EpubNavigationPoint) {
       return false;
     }
 
-    if (!collections.listsEqual(NavigationLabels, otherAs.NavigationLabels)) {
+    if (!collections.listsEqual(navigationLabels, other.navigationLabels)) {
       return false;
     }
 
-    if (!collections.listsEqual(
-        ChildNavigationPoints, otherAs.ChildNavigationPoints)) return false;
+    if (!collections.listsEqual(childNavigationPoints, other.childNavigationPoints)) {
+      return false;
+    }
 
-    return Id == otherAs.Id &&
-        Class == otherAs.Class &&
-        PlayOrder == otherAs.PlayOrder &&
-        Content == otherAs.Content;
+    return id == other.id && cssClass == other.cssClass && playOrder == other.playOrder && content == other.content;
   }
 
-  String toString() {
-    return 'Id: ${Id}, Content.Source: ${Content!.Source}';
-  }
+  @override
+  String toString() => 'Id: $id, Content.Source: ${content!.source}';
 }

@@ -2,43 +2,41 @@ library epubreadertest;
 
 import 'dart:math';
 
-import 'package:epubx/src/schema/navigation/epub_navigation_doc_title.dart';
+import 'package:repub/repub.dart';
 import 'package:test/test.dart';
 
 import '../../random_data_generator.dart';
 
-main() async {
-  final generator = new RandomDataGenerator(new Random(7898), 10);
+Future<void> main() async {
+  final RandomDataGenerator generator = RandomDataGenerator(Random(7898), 10);
   final EpubNavigationDocTitle reference = generator.randomNavigationDocTitle();
 
-  EpubNavigationDocTitle testNavigationDocTitle;
+  late EpubNavigationDocTitle testNavigationDocTitle;
   setUp(() async {
-    testNavigationDocTitle = new EpubNavigationDocTitle()
-      ..Titles = List.from(reference.Titles);
-  });
-  tearDown(() async {
-    testNavigationDocTitle = null;
+    testNavigationDocTitle = EpubNavigationDocTitle(
+      titles: List<String>.from(reference.titles),
+    );
   });
 
-  group("EpubNavigationDocTitle", () {
-    group(".equals", () {
-      test("is true for equivalent objects", () async {
+  group('EpubNavigationDocTitle', () {
+    group('.equals', () {
+      test('is true for equivalent objects', () async {
         expect(testNavigationDocTitle, equals(reference));
       });
 
-      test("is false when Titles changes", () async {
-        testNavigationDocTitle.Titles.add(generator.randomString());
+      test('is false when Titles changes', () async {
+        testNavigationDocTitle.titles.add(generator.randomString());
         expect(testNavigationDocTitle, isNot(reference));
       });
     });
 
-    group(".hashCode", () {
-      test("is true for equivalent objects", () async {
+    group('.hashCode', () {
+      test('is true for equivalent objects', () async {
         expect(testNavigationDocTitle.hashCode, equals(reference.hashCode));
       });
 
-      test("is false when Titles changes", () async {
-        testNavigationDocTitle.Titles.add(generator.randomString());
+      test('is false when Titles changes', () async {
+        testNavigationDocTitle.titles.add(generator.randomString());
         expect(testNavigationDocTitle.hashCode, isNot(reference.hashCode));
       });
     });

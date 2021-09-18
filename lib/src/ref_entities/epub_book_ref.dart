@@ -7,56 +7,47 @@ import 'package:quiver/core.dart';
 
 import '../entities/epub_schema.dart';
 import '../readers/book_cover_reader.dart';
-import '../readers/chapter_reader.dart';
+import '../readers/chapter_reader.dart' as chapter_reader;
 import 'epub_chapter_ref.dart';
 import 'epub_content_ref.dart';
 
 class EpubBookRef {
-  Archive? _epubArchive;
+  Archive? epubArchive;
 
-  String? Title;
-  String? Author;
-  List<String?>? AuthorList;
-  EpubSchema? Schema;
-  EpubContentRef? Content;
-  EpubBookRef(Archive epubArchive) {
-    _epubArchive = epubArchive;
-  }
+  String? title;
+  String? author;
+  List<String?>? authorList;
+  EpubSchema? schema;
+  EpubContentRef? content;
+
+  EpubBookRef({this.epubArchive, this.title, this.author, this.authorList, this.schema, this.content});
 
   @override
   int get hashCode {
-    var objects = [
-      Title.hashCode,
-      Author.hashCode,
-      Schema.hashCode,
-      Content.hashCode,
-      ...AuthorList?.map((author) => author.hashCode) ?? [0],
+    final List<int> objects = <int>[
+      title.hashCode,
+      author.hashCode,
+      schema.hashCode,
+      content.hashCode,
+      ...authorList?.map((String? author) => author.hashCode) ?? <int>[0],
     ];
     return hashObjects(objects);
   }
 
   @override
-  bool operator ==(other) {
-    if (!(other is EpubBookRef)) {
+  bool operator ==(Object other) {
+    if (other is! EpubBookRef) {
       return false;
     }
 
-    return Title == other.Title &&
-        Author == other.Author &&
-        Schema == other.Schema &&
-        Content == other.Content &&
-        collections.listsEqual(AuthorList, other.AuthorList);
+    return title == other.title &&
+        author == other.author &&
+        schema == other.schema &&
+        content == other.content &&
+        collections.listsEqual(authorList, other.authorList);
   }
 
-  Archive? EpubArchive() {
-    return _epubArchive;
-  }
+  Future<List<EpubChapterRef>> getChapters() async => chapter_reader.getChapters(this);
 
-  Future<List<EpubChapterRef>> getChapters() async {
-    return ChapterReader.getChapters(this);
-  }
-
-  Future<Image?> readCover() async {
-    return await BookCoverReader.readBookCover(this);
-  }
+  Future<Image?> readCover() async => readBookCover(this);
 }

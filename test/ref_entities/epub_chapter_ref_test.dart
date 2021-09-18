@@ -1,105 +1,102 @@
 library epubreadertest;
 
 import 'package:archive/archive.dart';
-import 'package:epubx/epub.dart';
-import 'package:epubx/src/ref_entities/epub_chapter_ref.dart';
-import 'package:epubx/src/ref_entities/epub_text_content_file_ref.dart';
+import 'package:repub/repub.dart';
 import 'package:test/test.dart';
 
-main() async {
-  var arch = new Archive();
-  var bookRef = new EpubBookRef(arch);
-  var contentFileRef = new EpubTextContentFileRef(bookRef);
-  var reference = new EpubChapterRef(contentFileRef);
+Future<void> main() async {
+  final Archive archive = Archive();
+  final EpubBookRef bookRef = EpubBookRef(epubArchive: archive);
+  final EpubTextContentFileRef contentFileRef = EpubTextContentFileRef(epubBookRef: bookRef);
+  final EpubChapterRef reference = EpubChapterRef(
+    epubTextContentFileRef: contentFileRef,
+    anchor: 'anchor',
+    contentFileName: 'orthros',
+    subChapters: <EpubChapterRef>[],
+    title: 'A New Look at Chapters',
+  );
 
-  reference
-    ..Anchor = "anchor"
-    ..ContentFileName = "orthros"
-    ..SubChapters = []
-    ..Title = "A New Look at Chapters";
-
-  EpubBookRef bookRef2;
-  EpubChapterRef testChapterRef;
+  late EpubBookRef bookRef2;
+  late EpubChapterRef testChapterRef;
   setUp(() async {
-    var arch2 = new Archive();
-    bookRef2 = new EpubBookRef(arch2);
-    var contentFileRef2 = new EpubTextContentFileRef(bookRef2);
+    final Archive archive2 = Archive();
+    bookRef2 = EpubBookRef(epubArchive: archive2);
+    final EpubTextContentFileRef contentFileRef2 = EpubTextContentFileRef(epubBookRef: bookRef2);
 
-    testChapterRef = new EpubChapterRef(contentFileRef2);
-    testChapterRef
-      ..Anchor = "anchor"
-      ..ContentFileName = "orthros"
-      ..SubChapters = []
-      ..Title = "A New Look at Chapters";
+    testChapterRef = EpubChapterRef(
+      epubTextContentFileRef: contentFileRef2,
+      anchor: 'anchor',
+      contentFileName: 'orthros',
+      subChapters: <EpubChapterRef>[],
+      title: 'A New Look at Chapters',
+    );
   });
 
-  tearDown(() async {
-    testChapterRef = null;
-    bookRef2 = null;
-  });
-  group("EpubChapterRef", () {
-    group(".equals", () {
-      test("is true for equivalent objects", () async {
+  group('EpubChapterRef', () {
+    group('.equals', () {
+      test('is true for equivalent objects', () async {
         expect(testChapterRef, equals(reference));
       });
 
-      test("is false when Anchor changes", () async {
-        testChapterRef.Anchor = "NotAnAnchor";
+      test('is false when Anchor changes', () async {
+        testChapterRef.anchor = 'NotAnAnchor';
         expect(testChapterRef, isNot(reference));
       });
 
-      test("is false when ContentFileName changes", () async {
-        testChapterRef.ContentFileName = "NotOrthros";
+      test('is false when ContentFileName changes', () async {
+        testChapterRef.contentFileName = 'NotOrthros';
         expect(testChapterRef, isNot(reference));
       });
 
-      test("is false when SubChapters changes", () async {
-        var subchapterContentFileRef = new EpubTextContentFileRef(bookRef2);
-        var chapter = new EpubChapterRef(subchapterContentFileRef);
-        chapter
-          ..Title = "A Brave new Epub"
-          ..ContentFileName = "orthros.txt";
-        testChapterRef.SubChapters = [chapter];
+      test('is false when SubChapters changes', () async {
+        final EpubTextContentFileRef subchapterContentFileRef = EpubTextContentFileRef(epubBookRef: bookRef2);
+        final EpubChapterRef chapter = EpubChapterRef(
+          epubTextContentFileRef: subchapterContentFileRef,
+          title: 'A Brave new Epub',
+          contentFileName: 'orthros.txt',
+        );
+        testChapterRef.subChapters = <EpubChapterRef>[chapter];
         expect(testChapterRef, isNot(reference));
       });
 
-      test("is false when Title changes", () async {
-        testChapterRef.Title = "A Boring Old World";
+      test('is false when Title changes', () async {
+        testChapterRef.title = 'A Boring Old World';
         expect(testChapterRef, isNot(reference));
       });
     });
 
-    group(".hashCode", () {
-      test("is true for equivalent objects", () async {
+    group('.hashCode', () {
+      test('is true for equivalent objects', () async {
         expect(testChapterRef.hashCode, equals(reference.hashCode));
       });
 
-      test("is true for equivalent objects", () async {
+      test('is true for equivalent objects', () async {
         expect(testChapterRef.hashCode, equals(reference.hashCode));
       });
 
-      test("is false when Anchor changes", () async {
-        testChapterRef.Anchor = "NotAnAnchor";
+      test('is false when Anchor changes', () async {
+        testChapterRef.anchor = 'NotAnAnchor';
         expect(testChapterRef.hashCode, isNot(reference.hashCode));
       });
 
-      test("is false when ContentFileName changes", () async {
-        testChapterRef.ContentFileName = "NotOrthros";
+      test('is false when ContentFileName changes', () async {
+        testChapterRef.contentFileName = 'NotOrthros';
         expect(testChapterRef.hashCode, isNot(reference.hashCode));
       });
 
-      test("is false when SubChapters changes", () async {
-        var subchapterContentFileRef = new EpubTextContentFileRef(bookRef2);
-        var chapter = new EpubChapterRef(subchapterContentFileRef);
-        chapter
-          ..Title = "A Brave new Epub"
-          ..ContentFileName = "orthros.txt";
-        testChapterRef.SubChapters = [chapter];
+      test('is false when SubChapters changes', () async {
+        final EpubTextContentFileRef subchapterContentFileRef = EpubTextContentFileRef(epubBookRef: bookRef2);
+        final EpubChapterRef chapter = EpubChapterRef(
+          epubTextContentFileRef: subchapterContentFileRef,
+          title: 'A Brave new Epub',
+          contentFileName: 'orthros.txt',
+        );
+        testChapterRef.subChapters = <EpubChapterRef>[chapter];
         expect(testChapterRef, isNot(reference));
       });
 
-      test("is false when Title changes", () async {
-        testChapterRef.Title = "A Boring Old World";
+      test('is false when Title changes', () async {
+        testChapterRef.title = 'A Boring Old World';
         expect(testChapterRef.hashCode, isNot(reference.hashCode));
       });
     });

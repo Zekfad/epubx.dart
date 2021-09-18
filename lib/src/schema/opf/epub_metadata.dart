@@ -8,66 +8,89 @@ import 'epub_metadata_identifier.dart';
 import 'epub_metadata_meta.dart';
 
 class EpubMetadata {
-  List<String>? Titles;
-  List<EpubMetadataCreator>? Creators;
-  List<String>? Subjects;
-  String? Description;
-  List<String>? Publishers;
-  List<EpubMetadataContributor>? Contributors;
-  List<EpubMetadataDate>? Dates;
-  List<String>? Types;
-  List<String>? Formats;
-  List<EpubMetadataIdentifier>? Identifiers;
-  List<String>? Sources;
-  List<String>? Languages;
-  List<String>? Relations;
-  List<String>? Coverages;
-  List<String>? Rights;
-  List<EpubMetadataMeta>? MetaItems;
+  List<String> titles;
+  List<EpubMetadataCreator> creators;
+  List<String> subjects;
+  String? description;
+  List<String> publishers;
+  List<EpubMetadataContributor> contributors;
+  List<EpubMetadataDate> dates;
+  List<String> types;
+  List<String> formats;
+  List<EpubMetadataIdentifier> identifiers;
+  List<String> sources;
+  List<String> languages;
+  List<String> relations;
+  List<String> coverages;
+  List<String> rights;
+  List<EpubMetadataMeta> metaItems;
+
+  EpubMetadata(
+      {this.titles = const <String>[],
+      this.creators = const <EpubMetadataCreator>[],
+      this.subjects = const <String>[],
+      this.description,
+      this.publishers = const <String>[],
+      this.contributors = const <EpubMetadataContributor>[],
+      this.dates = const <EpubMetadataDate>[],
+      this.types = const <String>[],
+      this.formats = const <String>[],
+      this.identifiers = const <EpubMetadataIdentifier>[],
+      this.sources = const <String>[],
+      this.languages = const <String>[],
+      this.relations = const <String>[],
+      this.coverages = const <String>[],
+      this.rights = const <String>[],
+      this.metaItems = const <EpubMetadataMeta>[]});
 
   @override
   int get hashCode {
-    var objects = []
-      ..addAll(Titles!.map((title) => title.hashCode))
-      ..addAll(Creators!.map((creator) => creator.hashCode))
-      ..addAll(Subjects!.map((subject) => subject.hashCode))
-      ..addAll(Publishers!.map((publisher) => publisher.hashCode))
-      ..addAll(Contributors!.map((contributor) => contributor.hashCode))
-      ..addAll(Dates!.map((date) => date.hashCode))
-      ..addAll(Types!.map((type) => type.hashCode))
-      ..addAll(Formats!.map((format) => format.hashCode))
-      ..addAll(Identifiers!.map((identifier) => identifier.hashCode))
-      ..addAll(Sources!.map((source) => source.hashCode))
-      ..addAll(Languages!.map((language) => language.hashCode))
-      ..addAll(Relations!.map((relation) => relation.hashCode))
-      ..addAll(Coverages!.map((coverage) => coverage.hashCode))
-      ..addAll(Rights!.map((right) => right.hashCode))
-      ..addAll(MetaItems!.map((metaItem) => metaItem.hashCode))
-      ..add(Description.hashCode);
+    final List<int> objects = <int>[
+      ...titles.map((String title) => title.hashCode),
+      ...creators.map((EpubMetadataCreator creator) => creator.hashCode),
+      ...subjects.map((String subject) => subject.hashCode),
+      ...publishers.map((String publisher) => publisher.hashCode),
+      ...contributors.map((EpubMetadataContributor contributor) => contributor.hashCode),
+      ...dates.map((EpubMetadataDate date) => date.hashCode),
+      ...types.map((String type) => type.hashCode),
+      ...formats.map((String format) => format.hashCode),
+      ...identifiers.map((EpubMetadataIdentifier identifier) => identifier.hashCode),
+      ...sources.map((String source) => source.hashCode),
+      ...languages.map((String language) => language.hashCode),
+      ...relations.map((String relation) => relation.hashCode),
+      ...coverages.map((String coverage) => coverage.hashCode),
+      ...rights.map((String right) => right.hashCode),
+      ...metaItems.map((EpubMetadataMeta metaItem) => metaItem.hashCode),
+      description.hashCode
+    ];
 
     return hashObjects(objects);
   }
 
-  bool operator ==(other) {
-    var otherAs = other as EpubMetadata;
-    if (otherAs == null) return false;
-    if (Description != otherAs.Description) return false;
+  @override
+  bool operator ==(Object other) {
+    if (other is! EpubMetadata) {
+      return false;
+    }
+    if (description != other.description) {
+      return false;
+    }
 
-    if (!collections.listsEqual(Titles, otherAs.Titles) ||
-        !collections.listsEqual(Creators, otherAs.Creators) ||
-        !collections.listsEqual(Subjects, otherAs.Subjects) ||
-        !collections.listsEqual(Publishers, otherAs.Publishers) ||
-        !collections.listsEqual(Contributors, otherAs.Contributors) ||
-        !collections.listsEqual(Dates, otherAs.Dates) ||
-        !collections.listsEqual(Types, otherAs.Types) ||
-        !collections.listsEqual(Formats, otherAs.Formats) ||
-        !collections.listsEqual(Identifiers, otherAs.Identifiers) ||
-        !collections.listsEqual(Sources, otherAs.Sources) ||
-        !collections.listsEqual(Languages, otherAs.Languages) ||
-        !collections.listsEqual(Relations, otherAs.Relations) ||
-        !collections.listsEqual(Coverages, otherAs.Coverages) ||
-        !collections.listsEqual(Rights, other.Rights) ||
-        !collections.listsEqual(MetaItems, other.MetaItems)) {
+    if (!collections.listsEqual(titles, other.titles) ||
+        !collections.listsEqual(creators, other.creators) ||
+        !collections.listsEqual(subjects, other.subjects) ||
+        !collections.listsEqual(publishers, other.publishers) ||
+        !collections.listsEqual(contributors, other.contributors) ||
+        !collections.listsEqual(dates, other.dates) ||
+        !collections.listsEqual(types, other.types) ||
+        !collections.listsEqual(formats, other.formats) ||
+        !collections.listsEqual(identifiers, other.identifiers) ||
+        !collections.listsEqual(sources, other.sources) ||
+        !collections.listsEqual(languages, other.languages) ||
+        !collections.listsEqual(relations, other.relations) ||
+        !collections.listsEqual(coverages, other.coverages) ||
+        !collections.listsEqual(rights, other.rights) ||
+        !collections.listsEqual(metaItems, other.metaItems)) {
       return false;
     }
 

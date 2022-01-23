@@ -22,7 +22,9 @@ String writeContent(EpubPackage package) {
     writeMetadata(builder, package.metadata ?? EpubMetadata(), package.version);
     writeManifest(builder, package.manifest);
     writeSpine(builder, package.spine!);
-    writeGuide(builder, package.guide);
+    if (package.guide != null) {
+      writeGuide(builder, package.guide!);
+    }
   });
 
   return builder.buildDocument().toXmlString();

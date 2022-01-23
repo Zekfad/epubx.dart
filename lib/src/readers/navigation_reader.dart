@@ -22,7 +22,6 @@ import '../schema/navigation/epub_navigation_target.dart';
 import '../schema/opf/epub_manifest_item.dart';
 import '../schema/opf/epub_package.dart';
 import '../schema/opf/epub_version.dart';
-import '../utils/enum_from_string.dart';
 import '../utils/zip_path_utils.dart';
 
 Future<EpubNavigation?> readNavigation(Archive epubArchive, String contentDirectoryPath, EpubPackage package) async {
@@ -251,9 +250,7 @@ EpubNavigationPageTarget readNavigationPageTarget(xml.XmlElement navigationPageT
         result.value = attributeValue;
         break;
       case 'type':
-        final EnumFromString<EpubNavigationPageTargetType> converter = EnumFromString<EpubNavigationPageTargetType>(EpubNavigationPageTargetType.values);
-        final EpubNavigationPageTargetType? type = converter.get(attributeValue);
-        result.type = type;
+        result.type = EpubNavigationPageTargetType.values.byName(attributeValue);
         break;
       case 'class':
         result.cssClass = attributeValue;

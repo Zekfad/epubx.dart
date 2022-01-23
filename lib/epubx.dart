@@ -42,4 +42,3 @@ export 'src/schema/opf/epub_package.dart';
 export 'src/schema/opf/epub_spine.dart';
 export 'src/schema/opf/epub_spine_item_ref.dart';
 export 'src/schema/opf/epub_version.dart';
-export 'src/utils/enum_from_string.dart';

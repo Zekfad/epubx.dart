@@ -6,7 +6,10 @@ import 'epub_manifest_item.dart';
 class EpubManifest {
   List<EpubManifestItem> items;
 
-  EpubManifest({this.items = const <EpubManifestItem>[]});
+  EpubManifest({
+    List<EpubManifestItem>? items,
+  }) :
+    items = items ?? <EpubManifestItem>[];
 
   @override
   int get hashCode => hashObjects(items.map((EpubManifestItem item) => item.hashCode));

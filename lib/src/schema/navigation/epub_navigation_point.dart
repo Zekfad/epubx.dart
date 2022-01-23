@@ -12,13 +12,16 @@ class EpubNavigationPoint {
   EpubNavigationContent? content;
   List<EpubNavigationPoint> childNavigationPoints;
 
-  EpubNavigationPoint(
-      {this.id,
-      this.cssClass,
-      this.playOrder,
-      this.navigationLabels = const <EpubNavigationLabel>[],
-      this.content,
-      this.childNavigationPoints = const <EpubNavigationPoint>[]});
+  EpubNavigationPoint({
+    this.id,
+    this.cssClass,
+    this.playOrder,
+    List<EpubNavigationLabel>? navigationLabels,
+    this.content,
+    List<EpubNavigationPoint>? childNavigationPoints,
+  }) :
+    navigationLabels = navigationLabels ?? <EpubNavigationLabel>[],
+    childNavigationPoints = childNavigationPoints ?? <EpubNavigationPoint>[];
 
   @override
   int get hashCode {

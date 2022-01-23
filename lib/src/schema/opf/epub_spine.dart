@@ -7,7 +7,11 @@ class EpubSpine {
   String? tableOfContents;
   List<EpubSpineItemRef> items;
 
-  EpubSpine({this.tableOfContents, this.items = const <EpubSpineItemRef>[]});
+  EpubSpine({
+    this.tableOfContents,
+    List<EpubSpineItemRef>? items,
+  }) :
+    items = items ?? <EpubSpineItemRef>[];
 
   @override
   int get hashCode {

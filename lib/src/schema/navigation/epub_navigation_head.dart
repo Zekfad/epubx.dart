@@ -6,7 +6,10 @@ import 'epub_navigation_head_meta.dart';
 class EpubNavigationHead {
   List<EpubNavigationHeadMeta> metadata;
 
-  EpubNavigationHead({this.metadata = const <EpubNavigationHeadMeta>[]});
+  EpubNavigationHead({
+    List<EpubNavigationHeadMeta>? metadata,
+  }) :
+    metadata = metadata ?? <EpubNavigationHeadMeta>[];
 
   @override
   int get hashCode {

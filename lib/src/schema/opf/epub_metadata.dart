@@ -25,23 +25,39 @@ class EpubMetadata {
   List<String> rights;
   List<EpubMetadataMeta> metaItems;
 
-  EpubMetadata(
-      {this.titles = const <String>[],
-      this.creators = const <EpubMetadataCreator>[],
-      this.subjects = const <String>[],
-      this.description,
-      this.publishers = const <String>[],
-      this.contributors = const <EpubMetadataContributor>[],
-      this.dates = const <EpubMetadataDate>[],
-      this.types = const <String>[],
-      this.formats = const <String>[],
-      this.identifiers = const <EpubMetadataIdentifier>[],
-      this.sources = const <String>[],
-      this.languages = const <String>[],
-      this.relations = const <String>[],
-      this.coverages = const <String>[],
-      this.rights = const <String>[],
-      this.metaItems = const <EpubMetadataMeta>[]});
+  EpubMetadata({
+    List<String>? titles,
+    List<EpubMetadataCreator>? creators,
+    List<String>? subjects,
+    this.description,
+    List<String>? publishers,
+    List<EpubMetadataContributor>? contributors,
+    List<EpubMetadataDate>? dates,
+    List<String>? types,
+    List<String>? formats,
+    List<EpubMetadataIdentifier>? identifiers,
+    List<String>? sources,
+    List<String>? languages,
+    List<String>? relations,
+    List<String>? coverages,
+    List<String>? rights,
+    List<EpubMetadataMeta>? metaItems,
+  }) :
+    titles = titles ?? <String>[],
+    creators = creators ?? <EpubMetadataCreator>[],
+    subjects = subjects ?? <String>[],
+    publishers = publishers ?? <String>[],
+    contributors = contributors ?? <EpubMetadataContributor>[],
+    dates = dates ?? <EpubMetadataDate>[],
+    types = types ?? <String>[],
+    formats = formats ?? <String>[],
+    identifiers = identifiers ?? <EpubMetadataIdentifier>[],
+    sources = sources ?? <String>[],
+    languages = languages ?? <String>[],
+    relations = relations ?? <String>[],
+    coverages = coverages ?? <String>[],
+    rights = rights ?? <String>[],
+    metaItems = metaItems ?? <EpubMetadataMeta>[];
 
   @override
   int get hashCode {

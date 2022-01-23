@@ -12,7 +12,15 @@ class EpubNavigationTarget {
   List<EpubNavigationLabel> navigationLabels;
   EpubNavigationContent? content;
 
-  EpubNavigationTarget({this.id, this.cssClass, this.value, this.playOrder, this.navigationLabels = const <EpubNavigationLabel>[], this.content});
+  EpubNavigationTarget({
+    this.id,
+    this.cssClass,
+    this.value,
+    this.playOrder,
+    List<EpubNavigationLabel>? navigationLabels,
+    this.content,
+  }) :
+    navigationLabels = navigationLabels ?? <EpubNavigationLabel>[];
 
   @override
   int get hashCode {

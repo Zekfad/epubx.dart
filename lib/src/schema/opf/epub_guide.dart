@@ -6,7 +6,10 @@ import 'epub_guide_reference.dart';
 class EpubGuide {
   List<EpubGuideReference> items;
 
-  EpubGuide({this.items = const <EpubGuideReference>[]});
+  EpubGuide({
+    List<EpubGuideReference>? items,
+  }) :
+    items = items ?? <EpubGuideReference>[];
 
   @override
   int get hashCode {

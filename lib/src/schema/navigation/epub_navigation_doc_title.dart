@@ -4,7 +4,10 @@ import 'package:quiver/core.dart';
 class EpubNavigationDocTitle {
   List<String> titles;
 
-  EpubNavigationDocTitle({this.titles = const <String>[]});
+  EpubNavigationDocTitle({
+    List<String>? titles,
+  }) :
+    titles = titles ?? <String>[];
 
   @override
   int get hashCode {

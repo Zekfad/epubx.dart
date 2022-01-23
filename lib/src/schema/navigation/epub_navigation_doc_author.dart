@@ -4,7 +4,10 @@ import 'package:quiver/core.dart';
 class EpubNavigationDocAuthor {
   List<String> authors;
 
-  EpubNavigationDocAuthor({this.authors = const <String>[]});
+  EpubNavigationDocAuthor({
+    List<String>? authors,
+  }) :
+    authors = authors ?? <String>[];
 
   @override
   int get hashCode {

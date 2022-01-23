@@ -1,6 +1,6 @@
 library epubreadertest;
 
-import 'package:repub/repub.dart';
+import 'package:epubx/epubx.dart';
 import 'package:test/test.dart';
 
 Future<void> main() async {

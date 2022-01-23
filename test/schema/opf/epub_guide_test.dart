@@ -2,7 +2,7 @@ library epubreadertest;
 
 import 'dart:math' show Random;
 
-import 'package:repub/repub.dart';
+import 'package:epubx/epubx.dart';
 import 'package:test/test.dart';
 
 import '../../random_data_generator.dart';

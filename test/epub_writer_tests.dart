@@ -3,7 +3,7 @@ library epubreadertest;
 import 'dart:io' as io;
 
 import 'package:path/path.dart' as path;
-import 'package:repub/repub.dart';
+import 'package:epubx/epubx.dart';
 import 'package:test/test.dart';
 
 Future<void> main() async {

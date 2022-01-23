@@ -4,7 +4,7 @@ import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:path/path.dart' as path;
-import 'package:repub/repub.dart';
+import 'package:epubx/epubx.dart';
 import 'package:test/test.dart';
 
 Future<void> main() async {

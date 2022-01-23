@@ -1,6 +1,6 @@
 import 'dart:math' show Random;
 
-import 'package:repub/repub.dart';
+import 'package:epubx/epubx.dart';
 
 class RandomString {
   final Random rng;

@@ -1,6 +1,6 @@
 library epubtest;
 
-import 'package:repub/repub.dart';
+import 'package:epubx/epubx.dart';
 import 'package:test/test.dart';
 
 void main() {

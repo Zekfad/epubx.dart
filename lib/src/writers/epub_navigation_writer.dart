@@ -1,77 +1,164 @@
-// ignore_for_file: avoid_classes_with_only_static_members
-
 import 'package:xml/xml.dart' show XmlBuilder;
 
+import '../schema/navigation/epub_metadata.dart';
 import '../schema/navigation/epub_navigation.dart';
-// import '../schema/navigation/epub_navigation_doc_author.dart';
+import '../schema/navigation/epub_navigation_doc_author.dart';
 import '../schema/navigation/epub_navigation_doc_title.dart';
 import '../schema/navigation/epub_navigation_head.dart';
 import '../schema/navigation/epub_navigation_head_meta.dart';
 import '../schema/navigation/epub_navigation_label.dart';
+import '../schema/navigation/epub_navigation_list.dart';
 import '../schema/navigation/epub_navigation_map.dart';
+import '../schema/navigation/epub_navigation_page_list.dart';
+import '../schema/navigation/epub_navigation_page_target.dart';
 import '../schema/navigation/epub_navigation_point.dart';
+import '../schema/navigation/epub_navigation_target.dart';
 
-class EpubNavigationWriter {
-  static const String _namespace = 'http://www.daisy.org/z3986/2005/ncx/';
+const String _namespace = 'http://www.daisy.org/z3986/2005/ncx/';
 
-  static String writeNavigation(EpubNavigation navigation) {
-    final XmlBuilder builder = XmlBuilder();
-    builder
-      ..processing('xml', 'version="1.0" encoding="UTF-8" standalone="no"')
-      ..element('ncx', attributes: <String, String>{
-        'version': '2005-1',
-        'lang': 'en',
-      }, nest: () {
-        builder.namespace(_namespace);
-
-        writeNavigationHead(builder, navigation.head!);
-        writeNavigationDocTitle(builder, navigation.docTitle!);
-        writeNavigationMap(builder, navigation.navMap!);
-      });
-
-    return builder.buildDocument().toXmlString();
-  }
-
-  static void writeNavigationDocTitle(XmlBuilder builder, EpubNavigationDocTitle title) {
-    builder.element('docTitle', nest: () {
-      title.titles.forEach(builder.text);
-    });
-  }
-
-  static void writeNavigationHead(XmlBuilder builder, EpubNavigationHead head) {
-    builder.element('head', nest: () {
-      for (final EpubNavigationHeadMeta item in head.metadata) {
-        builder.element('meta', attributes: <String, String>{
-          'content': item.content!,
-          'name': item.name!
-        });
-      }
-    });
-  }
-
-  static void writeNavigationMap(XmlBuilder builder, EpubNavigationMap map) {
-    builder.element('navMap', nest: () {
-      for (final EpubNavigationPoint item in map.points!) {
-        writeNavigationPoint(builder, item);
-      }
-    });
-  }
-
-  static void writeNavigationPoint(XmlBuilder builder, EpubNavigationPoint point) {
-    builder.element('navPoint', attributes: <String, String>{
-      'id': point.id!,
-      'playOrder': point.playOrder!,
+String writeNavigation(EpubNavigation navigation) {
+  final XmlBuilder builder = XmlBuilder();
+  builder
+    ..processing('xml', 'version="1.0" encoding="UTF-8" standalone="no"')
+    ..element('ncx', attributes: <String, String>{
+      'version': '2005-1',
+      'lang': 'en',
     }, nest: () {
-      for (final EpubNavigationLabel element in point.navigationLabels) {
-        builder.element('navLabel', nest: () {
-          builder.element('text', nest: () {
-            builder.text(element.text!);
-          });
-        });
+      builder.namespace(_namespace);
+
+      writeNavigationHead(builder, navigation.head!);
+      writeNavigationDocTitle(builder, navigation.docTitle!);
+      navigation.docAuthors?.forEach((EpubNavigationDocAuthor docAuthor) {
+        writeNavigationDocAuthor(builder, docAuthor);
+      });
+      writeNavigationMap(builder, navigation.navMap!);
+      if (navigation.pageList != null) {
+        writeNavigationPageList(builder, navigation.pageList!);
       }
-      builder.element('content', attributes: <String, String>{
-        'src': point.content!.source!,
+      navigation.navLists?.forEach((EpubNavigationList navList) {
+        writeNavigationList(builder, navList);
       });
     });
-  }
+
+  return builder.buildDocument().toXmlString(pretty: true);
+}
+
+void writeNavigationHead(XmlBuilder builder, EpubNavigationHead head) {
+  builder.element('head', nest: () {
+    for (final EpubNavigationHeadMeta item in head.metadata) {
+      builder.element('meta', attributes: <String, String>{
+        'name': item.name!,
+        'content': item.content!,
+      });
+    }
+  });
+}
+
+void writeNavigationDocTitle(XmlBuilder builder, EpubNavigationDocTitle title) {
+  builder.element('docTitle', nest: () {
+    title.titles.forEach(builder.text);
+  });
+}
+
+void writeNavigationDocAuthor(XmlBuilder builder, EpubNavigationDocAuthor docAuthor) {
+  builder.element('docAuthor', nest: () {
+    docAuthor.authors.forEach(builder.text);
+  });
+}
+
+void writeNavigationMap(XmlBuilder builder, EpubNavigationMap map) {
+  builder.element('navMap', nest: () {
+    for (final EpubNavigationPoint item in map.points!) {
+      writeNavigationPoint(builder, item);
+    }
+  });
+}
+
+void writeNavigationPageList(XmlBuilder builder, EpubNavigationPageList pageList) {
+  builder.element('pageList', nest: () {
+    for (final EpubNavigationPageTarget item in pageList.targets!) {
+      writeNavigationPageTarget(builder, item);
+    }
+  });
+}
+
+void writeNavigationPageTarget(XmlBuilder builder, EpubNavigationPageTarget target) {
+  builder.element('navTarget', attributes: <String, String>{
+    'id': target.id!,
+    if (target.cssClass != null)
+      'class': target.cssClass!,
+    'type': target.type!.name,
+    if (target.value != null)
+      'value': target.value!,
+    'playOrder': target.playOrder!,
+  }, nest: () {
+    for (final EpubNavigationLabel item in target.navigationLabels!) {
+      writeNavigationLabel(builder, item);
+    }
+    writeNavigationContent(builder, target.content!);
+  });
+}
+
+void writeNavigationList(XmlBuilder builder, EpubNavigationList navList) {
+  builder.element('navList', attributes: <String, String>{
+    'id': navList.id!,
+    if (navList.cssClass != null)
+      'class': navList.cssClass!,
+  }, nest: () {
+    for (final EpubNavigationLabel item in navList.navigationLabels!) {
+      writeNavigationLabel(builder, item);
+    }
+    for (final EpubNavigationTarget item in navList.navigationTargets!) {
+      writeNavigationTarget(builder, item);
+    }
+  });
+}
+
+void writeNavigationLabel(XmlBuilder builder, EpubNavigationLabel label) {
+  builder.element('navLabel', nest: () {
+    builder.text(label.text!);
+  });
+}
+
+void writeNavigationTarget(XmlBuilder builder, EpubNavigationTarget target) {
+  builder.element('navTarget', attributes: <String, String>{
+    'id': target.id!,
+    if (target.cssClass != null)
+      'class': target.cssClass!,
+    if (target.value != null)
+      'value': target.value!,
+    'playOrder': target.playOrder!,
+  }, nest: () {
+    for (final EpubNavigationLabel item in target.navigationLabels) {
+      writeNavigationLabel(builder, item);
+    }
+    writeNavigationContent(builder, target.content!);
+  });
+}
+
+void writeNavigationContent(XmlBuilder builder, EpubNavigationContent content) {
+  builder.element('content', attributes: {
+    'id': content.id!,
+    'src': content.source!,
+  });
+}
+
+void writeNavigationPoint(XmlBuilder builder, EpubNavigationPoint point) {
+  builder.element('navPoint', attributes: <String, String>{
+    'id': point.id!,
+    if (point.cssClass != null)
+      'class': point.cssClass!,
+    'playOrder': point.playOrder!,
+  }, nest: () {
+    for (final EpubNavigationLabel element in point.navigationLabels) {
+      builder.element('navLabel', nest: () {
+        builder.element('text', nest: () {
+          builder.text(element.text!);
+        });
+      });
+    }
+    builder.element('content', attributes: <String, String>{
+      'src': point.content!.source!,
+    });
+  });
 }

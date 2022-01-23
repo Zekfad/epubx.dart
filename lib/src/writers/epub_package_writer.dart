@@ -27,5 +27,5 @@ String writeContent(EpubPackage package) {
     }
   });
 
-  return builder.buildDocument().toXmlString();
+  return builder.buildDocument().toXmlString(pretty: true);
 }

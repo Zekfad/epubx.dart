@@ -1,6 +1,9 @@
 import 'dart:convert' as convert;
 
 import 'package:archive/archive.dart';
+import 'package:collection/collection.dart';
+import 'package:epubx/epubx.dart';
+import 'package:epubx/src/writers/epub_navigation_writer.dart';
 
 import 'entities/epub_book.dart';
 import 'entities/epub_byte_content_file.dart';
@@ -42,10 +45,25 @@ Archive _createArchive(EpubBook book) {
     archive.addFile(ArchiveFile(combine(book.schema!.contentDirectoryPath, name)!, content!.length, content));
   });
 
+  final EpubPackage package = book.schema!.package!;
+
   // Generate the content.opf file and add it to the Archive
-  final List<int> contentOpf = convert.utf8.encode(writeContent(book.schema!.package!));
+  final List<int> contentOpf = convert.utf8.encode(writeContent(package));
 
   archive.addFile(ArchiveFile(combine(book.schema!.contentDirectoryPath, 'content.opf')!, contentOpf.length, contentOpf));
+
+  final String? tocId = package.spine!.tableOfContents;
+  if (tocId == null || tocId.isEmpty) {
+    if (package.version == EpubVersion.epub2) {
+      throw Exception('EPUB writing error: TOC ID is empty.');
+    }
+  } else {
+    // Generate the table of contents .ncx file and add it to the Archive
+    final String tocFileEntryPath = package.manifest!.items.firstWhereOrNull((EpubManifestItem item) => item.id! == tocId)!.href!;
+    final List<int> tocNcx = convert.utf8.encode(writeNavigation(book.schema!.navigation!));
+
+    archive.addFile(ArchiveFile(combine(book.schema!.contentDirectoryPath, tocFileEntryPath)!, tocNcx.length, tocNcx));
+  }
 
   return archive;
 }

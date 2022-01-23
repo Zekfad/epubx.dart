@@ -4,7 +4,6 @@ import 'dart:convert' as convert;
 import 'package:archive/archive.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:xml/xml.dart' as xml;
-import 'package:path/path.dart' as path;
 
 import '../schema/navigation/epub_metadata.dart';
 import '../schema/navigation/epub_navigation.dart';

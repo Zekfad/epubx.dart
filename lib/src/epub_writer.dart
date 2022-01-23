@@ -9,18 +9,25 @@ import 'entities/epub_text_content_file.dart';
 import 'utils/zip_path_utils.dart';
 import 'writers/epub_package_writer.dart';
 
-const String _containerFile =
-    '<?xml version="1.0"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>';
+// ignore_for_file: missing_whitespace_between_adjacent_strings
+const String _containerFile = '<?xml version="1.0"?>'
+  '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">'
+    '<rootfiles>'
+      '<rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>'
+    '</rootfiles>'
+  '</container>';
 
 // Creates a Zip Archive of an EpubBook
 Archive _createArchive(EpubBook book) {
+  final List<int> mimeType = convert.utf8.encode('application/epub+zip');
+  final List<int> containerFile = convert.utf8.encode(_containerFile);
+
+
   final Archive archive = Archive()
-
     // Add simple metadata
-    ..addFile(ArchiveFile.noCompress('metadata', 20, convert.utf8.encode('application/epub+zip')))
-
+    ..addFile(ArchiveFile.noCompress('metadata', mimeType.length, mimeType))
     // Add Container file
-    ..addFile(ArchiveFile('META-INF/container.xml', _containerFile.length, convert.utf8.encode(_containerFile)));
+    ..addFile(ArchiveFile('META-INF/container.xml', containerFile.length, containerFile));
 
   // Add all content to the archive
   book.content!.allFiles.forEach((String name, EpubContentFile file) {
@@ -36,9 +43,9 @@ Archive _createArchive(EpubBook book) {
   });
 
   // Generate the content.opf file and add it to the Archive
-  final String contentOpf = writeContent(book.schema!.package!);
+  final List<int> contentOpf = convert.utf8.encode(writeContent(book.schema!.package!));
 
-  archive.addFile(ArchiveFile(combine(book.schema!.contentDirectoryPath, 'content.opf')!, contentOpf.length, convert.utf8.encode(contentOpf)));
+  archive.addFile(ArchiveFile(combine(book.schema!.contentDirectoryPath, 'content.opf')!, contentOpf.length, contentOpf));
 
   return archive;
 }

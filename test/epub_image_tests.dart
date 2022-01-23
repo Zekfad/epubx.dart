@@ -3,38 +3,35 @@ library epubreadertest;
 import 'dart:io' as io;
 
 import 'package:path/path.dart' as path;
+import 'package:repub/repub.dart';
 import 'package:test/test.dart';
 
-import 'package:epubx/epub.dart';
-
-main() async {
-  String fileName = "alicesAdventuresUnderGround.epub";
-  String fullPath =
-      path.join(io.Directory.current.path, "test", "res", fileName);
-  var targetFile = new io.File(fullPath);
-  if (!(await targetFile.exists())) {
-    throw new Exception("Specified epub file not found: ${fullPath}");
+Future<void> main() async {
+  const String fileName = 'alicesAdventuresUnderGround.epub';
+  final String fullPath = path.join(io.Directory.current.path, 'test', 'res', fileName);
+  final io.File targetFile = io.File(fullPath);
+  if (targetFile.existsSync()) {
+    throw Exception('Specified epub file not found: $fullPath');
   }
-  List<int> bytes = await targetFile.readAsBytes();
-  test("Test Epub Image", () async {
-    EpubBook epubRef = await EpubReader.readBook(bytes);
+  final List<int> bytes = await targetFile.readAsBytes();
 
-    expect(epubRef.CoverImage, isNotNull);
+  test('Test Epub Image', () async {
+    final EpubBook epubRef = await readBook(bytes);
 
-    expect(3, epubRef.CoverImage.format);
-    expect(581, epubRef.CoverImage.width);
-    expect(1034, epubRef.CoverImage.height);
+    expect(epubRef.coverImage, isNotNull);
+
+    expect(581, epubRef.coverImage!.width);
+    expect(1034, epubRef.coverImage!.height);
   });
 
-  test("Test Epub Ref Image", () async {
-    EpubBookRef epubRef = await EpubReader.openBook(bytes);
+  test('Test Epub Ref Image', () async {
+    final EpubBookRef epubRef = await openBook(bytes);
 
-    Image coverImage = await epubRef.readCover();
+    final Image? coverImage = await epubRef.readCover();
 
     expect(coverImage, isNotNull);
 
-    expect(3, coverImage.format);
-    expect(581, coverImage.width);
+    expect(581, coverImage!.width);
     expect(1034, coverImage.height);
   });
 }

@@ -5,39 +5,38 @@ import 'epub_metadata.dart';
 import 'epub_navigation_label.dart';
 
 class EpubNavigationTarget {
-  String? Id;
-  String? Class;
-  String? Value;
-  String? PlayOrder;
-  List<EpubNavigationLabel>? NavigationLabels;
-  EpubNavigationContent? Content;
+  String? id;
+  String? cssClass;
+  String? value;
+  String? playOrder;
+  List<EpubNavigationLabel> navigationLabels;
+  EpubNavigationContent? content;
+
+  EpubNavigationTarget({this.id, this.cssClass, this.value, this.playOrder, this.navigationLabels = const <EpubNavigationLabel>[], this.content});
 
   @override
   int get hashCode {
-    var objects = [
-      Id.hashCode,
-      Class.hashCode,
-      Value.hashCode,
-      PlayOrder.hashCode,
-      Content.hashCode,
-      ...NavigationLabels!.map((label) => label.hashCode)
+    final List<int> objects = <int>[
+      id.hashCode,
+      cssClass.hashCode,
+      value.hashCode,
+      playOrder.hashCode,
+      content.hashCode,
+      ...navigationLabels.map((EpubNavigationLabel label) => label.hashCode)
     ];
     return hashObjects(objects);
   }
 
   @override
-  bool operator ==(other) {
-    var otherAs = other as EpubNavigationTarget?;
-    if (otherAs == null) return false;
-
-    if (!(Id == otherAs.Id &&
-        Class == otherAs.Class &&
-        Value == otherAs.Value &&
-        PlayOrder == otherAs.PlayOrder &&
-        Content == otherAs.Content)) {
+  bool operator ==(Object other) {
+    if (other is! EpubNavigationTarget) {
       return false;
     }
 
-    return collections.listsEqual(NavigationLabels, otherAs.NavigationLabels);
+    if (!(id == other.id && cssClass == other.cssClass && value == other.value && playOrder == other.playOrder && content == other.content)) {
+      return false;
+    }
+
+    return collections.listsEqual(navigationLabels, other.navigationLabels);
   }
 }

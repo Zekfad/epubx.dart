@@ -1,49 +1,35 @@
 import 'package:quiver/core.dart';
 
 class EpubManifestItem {
-  String? Id;
-  String? Href;
-  String? MediaType;
-  String? MediaOverlay;
-  String? RequiredNamespace;
-  String? RequiredModules;
-  String? Fallback;
-  String? FallbackStyle;
-  String? Properties;
+  String? id;
+  String? href;
+  String? mediaType;
+  String? requiredNamespace;
+  String? requiredModules;
+  String? fallback;
+  String? fallbackStyle;
+
+  EpubManifestItem({this.id, this.href, this.mediaType, this.requiredNamespace, this.requiredModules, this.fallback, this.fallbackStyle});
 
   @override
-  int get hashCode => hashObjects([
-        Id.hashCode,
-        Href.hashCode,
-        MediaType.hashCode,
-        MediaOverlay.hashCode,
-        RequiredNamespace.hashCode,
-        RequiredModules.hashCode,
-        Fallback.hashCode,
-        FallbackStyle.hashCode,
-        Properties.hashCode
-      ]);
+  int get hashCode => hashObjects(
+      <int>[id.hashCode, href.hashCode, mediaType.hashCode, requiredNamespace.hashCode, requiredModules.hashCode, fallback.hashCode, fallbackStyle.hashCode]);
 
   @override
-  bool operator ==(other) {
-    var otherAs = other as EpubManifestItem?;
-    if (otherAs == null) {
+  bool operator ==(Object other) {
+    if (other is! EpubManifestItem) {
       return false;
     }
 
-    return Id == otherAs.Id &&
-        Href == otherAs.Href &&
-        MediaType == otherAs.MediaType &&
-        MediaOverlay == otherAs.MediaOverlay &&
-        RequiredNamespace == otherAs.RequiredNamespace &&
-        RequiredModules == otherAs.RequiredModules &&
-        Fallback == otherAs.Fallback &&
-        FallbackStyle == otherAs.FallbackStyle &&
-        Properties == otherAs.Properties;
+    return id == other.id &&
+        href == other.href &&
+        mediaType == other.mediaType &&
+        requiredNamespace == other.requiredNamespace &&
+        requiredModules == other.requiredModules &&
+        fallback == other.fallback &&
+        fallbackStyle == other.fallbackStyle;
   }
 
   @override
-  String toString() {
-    return 'Id: $Id, Href = $Href, MediaType = $MediaType, Properties = $Properties, MediaOverlay = $MediaOverlay';
-  }
+  String toString() => 'Id: $id, Href = $href, MediaType = $mediaType';
 }

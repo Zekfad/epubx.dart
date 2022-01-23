@@ -1,18 +1,19 @@
 class EpubNavigationLabel {
-  String? Text;
+  String? text;
+
+  EpubNavigationLabel({this.text});
 
   @override
-  int get hashCode => Text.hashCode;
+  int get hashCode => text.hashCode;
 
   @override
-  bool operator ==(other) {
-    var otherAs = other as EpubNavigationLabel?;
-    if (otherAs == null) return false;
-    return Text == otherAs.Text;
+  bool operator ==(Object other) {
+    if (other is! EpubNavigationLabel) {
+      return false;
+    }
+    return text == other.text;
   }
 
   @override
-  String toString() {
-    return Text!;
-  }
+  String toString() => text!;
 }

@@ -5,35 +5,38 @@ import 'epub_navigation_label.dart';
 import 'epub_navigation_target.dart';
 
 class EpubNavigationList {
-  String? Id;
-  String? Class;
-  List<EpubNavigationLabel>? NavigationLabels;
-  List<EpubNavigationTarget>? NavigationTargets;
+  String? id;
+  String? cssClass;
+  List<EpubNavigationLabel>? navigationLabels;
+  List<EpubNavigationTarget>? navigationTargets;
+
+  EpubNavigationList({this.id, this.cssClass, this.navigationLabels, this.navigationTargets});
 
   @override
   int get hashCode {
-    var objects = [
-      Id.hashCode,
-      Class.hashCode,
-      ...NavigationLabels?.map((label) => label.hashCode) ?? [0],
-      ...NavigationTargets?.map((target) => target.hashCode) ?? [0]
+    final List<int> objects = <int>[
+      id.hashCode,
+      cssClass.hashCode,
+      ...navigationLabels?.map((EpubNavigationLabel label) => label.hashCode) ?? <int>[0],
+      ...navigationTargets?.map((EpubNavigationTarget target) => target.hashCode) ?? <int>[0]
     ];
     return hashObjects(objects);
   }
 
   @override
-  bool operator ==(other) {
-    var otherAs = other as EpubNavigationList?;
-    if (otherAs == null) return false;
-
-    if (!(Id == otherAs.Id && Class == otherAs.Class)) {
+  bool operator ==(Object other) {
+    if (other is! EpubNavigationList) {
       return false;
     }
 
-    if (!collections.listsEqual(NavigationLabels, otherAs.NavigationLabels)) {
+    if (!(id == other.id && cssClass == other.cssClass)) {
       return false;
     }
-    if (!collections.listsEqual(NavigationTargets, otherAs.NavigationTargets)) {
+
+    if (!collections.listsEqual(navigationLabels, other.navigationLabels)) {
+      return false;
+    }
+    if (!collections.listsEqual(navigationTargets, other.navigationTargets)) {
       return false;
     }
     return true;

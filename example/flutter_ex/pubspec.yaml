@@ -3,18 +3,27 @@ description: A new Flutter project.
 publish_to: none
 version: 1.0.0+1
 
+publish_to: none
+
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.3
+
   flutter:
     sdk: flutter
+
+  # To get the epub from the internet
+  http: ^0.13.3
+
+  image: ^3.0.0
+
   # Epub
   epubx:
     path: ../../
-  # To get the epub from the internet
-  http:  ^0.13.4
-  image: ^3.0.8
 
 dev_dependencies:
   flutter_test:

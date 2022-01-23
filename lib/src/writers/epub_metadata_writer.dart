@@ -1,105 +1,117 @@
-import 'package:epubx/src/schema/opf/epub_metadata.dart';
-import 'package:epubx/src/schema/opf/epub_version.dart';
-import 'package:xml/src/xml/builder.dart' show XmlBuilder;
+import 'package:xml/xml.dart';
 
-class EpubMetadataWriter {
-  static const _dc_namespace = 'http://purl.org/dc/elements/1.1/';
-  static const _opf_namespace = 'http://www.idpf.org/2007/opf';
+import '../schema/opf/epub_metadata.dart';
+import '../schema/opf/epub_metadata_contributor.dart';
+import '../schema/opf/epub_metadata_creator.dart';
+import '../schema/opf/epub_metadata_date.dart';
+import '../schema/opf/epub_metadata_identifier.dart';
+import '../schema/opf/epub_metadata_meta.dart';
+import '../schema/opf/epub_version.dart';
 
-  static void writeMetadata(
-      XmlBuilder builder, EpubMetadata? meta, EpubVersion? version) {
-    builder.element('metadata',
-        namespaces: {_opf_namespace: 'opf', _dc_namespace: 'dc'}, nest: () {
-      meta!
-        ..Titles?.forEach((item) =>
-            builder.element('title', nest: item, namespace: _dc_namespace))
-        ..Creators?.forEach((item) =>
-            builder.element('creator', namespace: _dc_namespace, nest: () {
-              if (item.Role != null) {
-                builder.attribute('role', item.Role!,
-                    namespace: _opf_namespace);
-              }
-              if (item.FileAs != null) {
-                builder.attribute('file-as', item.FileAs!,
-                    namespace: _opf_namespace);
-              }
-              builder.text(item.Creator!);
-            }))
-        ..Subjects?.forEach((item) =>
-            builder.element('subject', namespace: _dc_namespace, nest: item))
-        ..Publishers?.forEach((item) =>
-            builder.element('publisher', namespace: _dc_namespace, nest: item))
-        ..Contributors?.forEach((item) =>
-            builder.element('contributor', namespace: _dc_namespace, nest: () {
-              if (item.Role != null) {
-                builder.attribute('role', item.Role!,
-                    namespace: _opf_namespace);
-              }
-              if (item.FileAs != null) {
-                builder.attribute('file-as', item.FileAs!,
-                    namespace: _opf_namespace);
-              }
-              builder.text(item.Contributor!);
-            }))
-        ..Dates?.forEach((date) =>
-            builder.element('date', namespace: _dc_namespace, nest: () {
-              if (date.Event != null) {
-                builder.attribute('event', date.Event!,
-                    namespace: _opf_namespace);
-              }
-              builder.text(date.Date!);
-            }))
-        ..Types?.forEach((type) =>
-            builder.element('type', namespace: _dc_namespace, nest: type))
-        ..Formats?.forEach((format) =>
-            builder.element('format', namespace: _dc_namespace, nest: format))
-        ..Identifiers?.forEach((id) =>
-            builder.element('identifier', namespace: _dc_namespace, nest: () {
-              if (id.Id != null) builder.attribute('id', id.Id!);
-              if (id.Scheme != null) {
-                builder.attribute('scheme', id.Scheme!,
-                    namespace: _opf_namespace);
-              }
-              builder.text(id.Identifier!);
-            }))
-        ..Sources?.forEach((item) =>
-            builder.element('source', namespace: _dc_namespace, nest: item))
-        ..Languages?.forEach((item) =>
-            builder.element('language', namespace: _dc_namespace, nest: item))
-        ..Relations?.forEach((item) =>
-            builder.element('relation', namespace: _dc_namespace, nest: item))
-        ..Coverages?.forEach((item) =>
-            builder.element('coverage', namespace: _dc_namespace, nest: item))
-        ..Rights?.forEach((item) =>
-            builder.element('rights', namespace: _dc_namespace, nest: item))
-        ..MetaItems?.forEach((metaitem) => builder.element('meta', nest: () {
-              if (version == EpubVersion.Epub2) {
-                if (metaitem.Name != null) {
-                  builder.attribute('name', metaitem.Name!);
-                }
-                if (metaitem.Content != null) {
-                  builder.attribute('content', metaitem.Content!);
-                }
-              } else if (version == EpubVersion.Epub3) {
-                if (metaitem.Id != null) {
-                  builder.attribute('id', metaitem.Id!);
-                }
-                if (metaitem.Refines != null) {
-                  builder.attribute('refines', metaitem.Refines!);
-                }
-                if (metaitem.Property != null) {
-                  builder.attribute('property', metaitem.Property!);
-                }
-                if (metaitem.Scheme != null) {
-                  builder.attribute('scheme', metaitem.Scheme!);
-                }
-              }
-            }));
+const String _dcNamespace = 'http://purl.org/dc/elements/1.1/';
+const String _opfNamespace = 'http://www.idpf.org/2007/opf';
 
-      if (meta.Description != null) {
-        builder.element('description',
-            namespace: _dc_namespace, nest: meta.Description);
-      }
-    });
-  }
+void writeMetadata(XmlBuilder builder, EpubMetadata meta, EpubVersion? version) {
+  builder.element('metadata', namespaces: <String, String>{_opfNamespace: 'opf', _dcNamespace: 'dc'}, nest: () {
+    for (final String title in meta.titles) {
+      builder.element('title', nest: title, namespace: _dcNamespace);
+    }
+    for (final EpubMetadataCreator creator in meta.creators) {
+      builder.element('creator', namespace: _dcNamespace, nest: () {
+        if (creator.role != null) {
+          builder.attribute('role', creator.role!, namespace: _opfNamespace);
+        }
+        if (creator.fileAs != null) {
+          builder.attribute('file-as', creator.fileAs!, namespace: _opfNamespace);
+        }
+        builder.text(creator.creator!);
+      });
+    }
+    for (final String subject in meta.subjects) {
+      builder.element('subject', nest: subject, namespace: _dcNamespace);
+    }
+    for (final String publisher in meta.publishers) {
+      builder.element('publisher', nest: publisher, namespace: _dcNamespace);
+    }
+    for (final EpubMetadataContributor contributor in meta.contributors) {
+      builder.element('contributor', namespace: _dcNamespace, nest: () {
+        if (contributor.role != null) {
+          builder.attribute('role', contributor.role!, namespace: _opfNamespace);
+        }
+        if (contributor.fileAs != null) {
+          builder.attribute('file-as', contributor.fileAs!, namespace: _opfNamespace);
+        }
+        builder.text(contributor.contributor!);
+      });
+    }
+    for (final EpubMetadataDate date in meta.dates) {
+      builder.element('date', namespace: _dcNamespace, nest: () {
+        if (date.event != null) {
+          builder.attribute('event', date.event!, namespace: _opfNamespace);
+        }
+        builder.text(date.date!);
+      });
+    }
+    for (final String type in meta.types) {
+      builder.element('type', namespace: _dcNamespace, nest: type);
+    }
+    for (final String format in meta.formats) {
+      builder.element('format', nest: format, namespace: _dcNamespace);
+    }
+    for (final EpubMetadataIdentifier id in meta.identifiers) {
+      builder.element('identifier', namespace: _dcNamespace, nest: () {
+        if (id.id != null) {
+          builder.attribute('id', id.id!);
+        }
+        if (id.scheme != null) {
+          builder.attribute('scheme', id.scheme!, namespace: _opfNamespace);
+        }
+        builder.text(id.identifier!);
+      });
+    }
+    for (final String source in meta.sources) {
+      builder.element('source', nest: source, namespace: _dcNamespace);
+    }
+    for (final String language in meta.languages) {
+      builder.element('language', nest: language, namespace: _dcNamespace);
+    }
+    for (final String relation in meta.relations) {
+      builder.element('relation', nest: relation, namespace: _dcNamespace);
+    }
+    for (final String coverage in meta.coverages) {
+      builder.element('coverage', nest: coverage, namespace: _dcNamespace);
+    }
+    for (final String right in meta.rights) {
+      builder.element('rights', nest: right, namespace: _dcNamespace);
+    }
+    for (final EpubMetadataMeta metaItem in meta.metaItems) {
+      builder.element('meta', nest: () {
+        if (version == EpubVersion.epub2) {
+          if (metaItem.name != null) {
+            builder.attribute('name', metaItem.name!);
+          }
+          if (metaItem.content != null) {
+            builder.attribute('content', metaItem.content!);
+          }
+        } else if (version == EpubVersion.epub3) {
+          if (metaItem.id != null) {
+            builder.attribute('id', metaItem.id!);
+          }
+          if (metaItem.refines != null) {
+            builder.attribute('refines', metaItem.refines!);
+          }
+          if (metaItem.property != null) {
+            builder.attribute('property', metaItem.property!);
+          }
+          if (metaItem.scheme != null) {
+            builder.attribute('scheme', metaItem.scheme!);
+          }
+        }
+      });
+    }
+
+    if (meta.description != null) {
+      builder.element('description', namespace: _dcNamespace, nest: meta.description);
+    }
+  });
 }

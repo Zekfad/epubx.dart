@@ -1,50 +1,43 @@
 library epubreadertest;
 
-import 'package:epubx/src/schema/opf/epub_metadata_date.dart';
+import 'package:repub/repub.dart';
 import 'package:test/test.dart';
 
-main() async {
-  var reference = new EpubMetadataDate()
-    ..Date = "a date"
-    ..Event = "Some important event";
+Future<void> main() async {
+  final EpubMetadataDate reference = EpubMetadataDate(date: 'a date', event: 'Some important event');
 
-  EpubMetadataDate testMetadataDate;
+  late EpubMetadataDate testMetadataDate;
   setUp(() async {
-    testMetadataDate = new EpubMetadataDate()
-      ..Date = reference.Date
-      ..Event = reference.Event;
-  });
-  tearDown(() async {
-    testMetadataDate = null;
+    testMetadataDate = EpubMetadataDate(date: reference.date, event: reference.event);
   });
 
-  group("EpubMetadataIdentifier", () {
-    group(".equals", () {
-      test("is true for equivalent objects", () async {
+  group('EpubMetadataIdentifier', () {
+    group('.equals', () {
+      test('is true for equivalent objects', () async {
         expect(testMetadataDate, equals(reference));
       });
 
-      test("is false when Date changes", () async {
-        testMetadataDate.Date = "A different Date";
+      test('is false when Date changes', () async {
+        testMetadataDate.date = 'A different Date';
         expect(testMetadataDate, isNot(reference));
       });
-      test("is false when Event changes", () async {
-        testMetadataDate.Event = "A non important event";
+      test('is false when Event changes', () async {
+        testMetadataDate.event = 'A non important event';
         expect(testMetadataDate, isNot(reference));
       });
     });
 
-    group(".hashCode", () {
-      test("is true for equivalent objects", () async {
+    group('.hashCode', () {
+      test('is true for equivalent objects', () async {
         expect(testMetadataDate.hashCode, equals(reference.hashCode));
       });
 
-      test("is false when Date changes", () async {
-        testMetadataDate.Date = "A different date";
+      test('is false when Date changes', () async {
+        testMetadataDate.date = 'A different date';
         expect(testMetadataDate.hashCode, isNot(reference.hashCode));
       });
-      test("is false when Event changes", () async {
-        testMetadataDate.Event = "A non important event";
+      test('is false when Event changes', () async {
+        testMetadataDate.event = 'A non important event';
         expect(testMetadataDate.hashCode, isNot(reference.hashCode));
       });
     });

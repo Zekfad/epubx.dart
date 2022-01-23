@@ -9,43 +9,41 @@ import 'epub_navigation_map.dart';
 import 'epub_navigation_page_list.dart';
 
 class EpubNavigation {
-  EpubNavigationHead? Head;
-  EpubNavigationDocTitle? DocTitle;
-  List<EpubNavigationDocAuthor>? DocAuthors;
-  EpubNavigationMap? NavMap;
-  EpubNavigationPageList? PageList;
-  List<EpubNavigationList>? NavLists;
+  EpubNavigationHead? head;
+  EpubNavigationDocTitle? docTitle;
+  List<EpubNavigationDocAuthor>? docAuthors;
+  EpubNavigationMap? navMap;
+  EpubNavigationPageList? pageList;
+  List<EpubNavigationList>? navLists;
+
+  EpubNavigation({this.head, this.docTitle, this.docAuthors, this.navMap, this.pageList, this.navLists});
 
   @override
   int get hashCode {
-    var objects = [
-      Head.hashCode,
-      DocTitle.hashCode,
-      NavMap.hashCode,
-      PageList.hashCode,
-      ...DocAuthors?.map((author) => author.hashCode) ?? [0],
-      ...NavLists?.map((navList) => navList.hashCode) ?? [0]
+    final List<int> objects = <int>[
+      head.hashCode,
+      docTitle.hashCode,
+      navMap.hashCode,
+      pageList.hashCode,
+      ...docAuthors?.map((EpubNavigationDocAuthor author) => author.hashCode) ?? <int>[0],
+      ...navLists?.map((EpubNavigationList navList) => navList.hashCode) ?? <int>[0]
     ];
     return hashObjects(objects);
   }
 
   @override
-  bool operator ==(other) {
-    var otherAs = other as EpubNavigation?;
-    if (otherAs == null) {
+  bool operator ==(Object other) {
+    if (other is! EpubNavigation) {
       return false;
     }
 
-    if (!collections.listsEqual(DocAuthors, otherAs.DocAuthors)) {
+    if (!collections.listsEqual(docAuthors, other.docAuthors)) {
       return false;
     }
-    if (!collections.listsEqual(NavLists, otherAs.NavLists)) {
+    if (!collections.listsEqual(navLists, other.navLists)) {
       return false;
     }
 
-    return Head == otherAs.Head &&
-        DocTitle == otherAs.DocTitle &&
-        NavMap == otherAs.NavMap &&
-        PageList == otherAs.PageList;
+    return head == other.head && docTitle == other.docTitle && navMap == other.navMap && pageList == other.pageList;
   }
 }

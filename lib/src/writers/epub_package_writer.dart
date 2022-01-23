@@ -15,7 +15,7 @@ String writeContent(EpubPackage package) {
 
   builder.element('package', attributes: <String, String>{
     'version': package.version == EpubVersion.epub2 ? '2.0' : '3.0',
-    'unique-identifier': 'etextno',
+    'unique-identifier': package.uniqueIdentifier!,
   }, nest: () {
     builder.namespace(_namespace);
 

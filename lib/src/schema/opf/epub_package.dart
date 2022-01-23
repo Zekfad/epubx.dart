@@ -12,11 +12,19 @@ class EpubPackage {
   EpubManifest? manifest;
   EpubSpine? spine;
   EpubGuide? guide;
+  String? uniqueIdentifier;
 
-  EpubPackage({this.version, this.metadata, this.manifest, this.spine, this.guide});
+  EpubPackage({
+    this.version,
+    this.metadata,
+    this.manifest,
+    this.spine,
+    this.guide,
+    this.uniqueIdentifier,
+  });
 
   @override
-  int get hashCode => hashObjects(<int>[version.hashCode, metadata.hashCode, manifest.hashCode, spine.hashCode, guide.hashCode]);
+  int get hashCode => hashObjects(<int>[version.hashCode, metadata.hashCode, manifest.hashCode, spine.hashCode, guide.hashCode, uniqueIdentifier.hashCode]);
 
   @override
   bool operator ==(Object other) {
@@ -24,6 +32,6 @@ class EpubPackage {
       return false;
     }
 
-    return version == other.version && metadata == other.metadata && manifest == other.manifest && spine == other.spine && guide == other.guide;
+    return version == other.version && metadata == other.metadata && manifest == other.manifest && spine == other.spine && guide == other.guide && uniqueIdentifier == other.uniqueIdentifier;
   }
 }

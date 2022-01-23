@@ -1,4 +1,4 @@
-import 'package:xml/xml.dart' show XmlBuilder;
+import 'package:xml/xml.dart' show XmlBuilder, XmlDoctype;
 
 import '../schema/navigation/epub_metadata.dart';
 import '../schema/navigation/epub_navigation.dart';
@@ -20,9 +20,9 @@ String writeNavigation(EpubNavigation navigation) {
   final XmlBuilder builder = XmlBuilder();
   builder
     ..processing('xml', 'version="1.0" encoding="UTF-8" standalone="no"')
+    ..xml('<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"\n"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">')
     ..element('ncx', attributes: <String, String>{
       'version': '2005-1',
-      'lang': 'en',
     }, nest: () {
       builder.namespace(_namespace);
 
@@ -56,14 +56,20 @@ void writeNavigationHead(XmlBuilder builder, EpubNavigationHead head) {
 
 void writeNavigationDocTitle(XmlBuilder builder, EpubNavigationDocTitle title) {
   builder.element('docTitle', nest: () {
-    title.titles.forEach(builder.text);
+    builder.element('text', nest: () {
+      builder.text(title.titles.join(', '));
+    });
   });
 }
 
 void writeNavigationDocAuthor(XmlBuilder builder, EpubNavigationDocAuthor docAuthor) {
-  builder.element('docAuthor', nest: () {
-    docAuthor.authors.forEach(builder.text);
-  });
+  for (final String author in docAuthor.authors) {
+    builder.element('docAuthor', nest: () {
+      builder.element('text', nest: () {
+        builder.text(author);
+      });
+    });
+  }
 }
 
 void writeNavigationMap(XmlBuilder builder, EpubNavigationMap map) {

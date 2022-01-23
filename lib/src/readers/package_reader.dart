@@ -283,6 +283,8 @@ Future<EpubPackage> readPackage(Archive epubArchive, String rootFilePath) async 
   } else {
     throw Exception('Unsupported EPUB version: $epubVersionValue.');
   }
+  final String? uniqueIdentifier = packageNode.getAttribute('unique-identifier');
+  result.uniqueIdentifier = uniqueIdentifier;
   final XmlElement? metadataNode =
       packageNode.findElements('metadata', namespace: opfNamespace).cast<XmlElement?>().firstWhere((XmlElement? elem) => elem != null);
   if (metadataNode == null) {
